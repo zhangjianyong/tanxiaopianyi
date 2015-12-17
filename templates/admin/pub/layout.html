@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+	<% include head.html %>
+	<body>
+		<% include nav.html %>
+		<div class="main-container" id="main-container">
+			<div class="main-container-inner">
+				<% include sidebar.html %>
+				<div class="main-content">
+					<% include search.html %>
+					<% -body %>
+				</div><!-- /.main-content -->
+				<% include settings.html %>
+			</div><!-- /.main-container-inner -->
+		</div><!-- /.main-container -->
+		<% include script.html %>
+	</body>
+</html>

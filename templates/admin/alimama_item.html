@@ -1,0 +1,74 @@
+<div class="modal-body no-padding">
+	<table class="table table-striped table-bordered table-hover no-margin-bottom no-border-top">
+		<thead>
+			<tr>
+				<th>商品ID</th>
+				<th>鹊桥活动ID</th>
+				<th>活动名称</th>
+				<th>卖家ID</th>
+				<th>原价</th>
+				<th>折扣价</th>
+				<th>折扣比例</th>
+				<th>佣金比例</th>
+				<th>分佣比例</th>
+				<th>佣金(折扣价*佣金比例*分佣比例*90%)</th>
+				<th>销售量</th>
+				<th>是否是天猫</th>
+				<th>活动开始时间</th>
+				<th>活动结束时间</th>
+				<th>此商品抓取时间</th>
+				<th>此商品最后抓取时间</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<%items.forEach(function(item){%>
+			<tr>
+				<td><a href="//detail.tmall.com/item.htm?id=<%=:item.item_id%>" target="_blank"><%=:item.item_id%></td>
+				<td><a href="//temai.taobao.com/preview.htm?id=<%=:item.activity_id%>" target="_blank"><%=:item.activity_id%></a></td>
+				<td><a href="//temai.taobao.com/preview.htm?id=<%=:item.activity_id%>" target="_blank"><%=:item.title%></a></td>
+				<td><%=:item.seller_id%></td>
+				<td><%=:item.auction_price/100%></td>
+				<td><%=:item.discount_price/100%></td>
+				<td><%=:item.discount_rate/100%></td>
+				<td><%=:item.commission_rate/100%>%</td>
+				<td><%=:item.share_rate/100%>%</td>
+				<td><%=:item.discount_price/100*item.commission_rate/100*item.share_rate/100*0.9/10000 | toFixed%></td>
+				<td><%=:item.sold_quantity%></td>
+				<td><%=:item.is_mall%></td>
+				<td><%=:item.begin_time | format_day%></td>
+				<td><%=:item.end_time | format_day%></td>
+				<td><%=:item.create_time | format_daytime%></td>
+				<td><%=:item.last_modify | format_daytime%></td>
+				<td><a class="act_item" data-item="<%=:item.item_id%>" data-act="<%=:item.activity_id%>" href="javascript:void(0);">加入推广计划</a></td>
+			</tr>
+			<%})%>
+		</tbody>
+	</table>
+</div>
+<script type="text/javascript">
+$("a.act_item").on('click', (function(i) {
+	var t = $(this);
+	var item = t.attr('data-item');
+	var act = t.attr('data-act');
+	$.get("/admin/i/alimama_product_add", {
+		item_id: item,
+		act_id: act
+	}).success(function(data) {
+		alert('成功');
+		console.log(data);
+	}).error(function(xhr, status, error) {
+		console.error(error);
+		alert('系统错误');
+	}).complete(function() {
+		$('.ace-thumbnails [data-rel="colorbox"]').each(function(i) {
+			var item_id = this.id;
+			var option = $.extend({
+				href: '/admin/alimama_item?item_id=' + item_id
+			}, colorbox_params);
+			$(this).colorbox(option);
+		});
+		$("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>"); //let's add a custom loading icon
+	});
+}));
+</script>

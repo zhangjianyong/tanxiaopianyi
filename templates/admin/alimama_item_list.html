@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+	<% include pub/head.html %>
+	<body>
+		<% include pub/nav.html %>
+		<div class="main-container" id="main-container">
+			<div class="main-container-inner">
+				<% include pub/sidebar.html %>
+				<div class="main-content">
+					<% include pub/search.html %>
+					<div class="page-content">
+						<div class="page-header">
+							<h1>
+								Gallery
+								<small>
+									<i class="icon-double-angle-right"></i>
+									responsive photo gallery using colorbox
+								</small>
+							</h1>
+						</div><!-- /.page-header -->
+
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+
+								<div class="row-fluid" style="height:1000px;overflow:scroll;">
+									<ul id="show" class="ace-thumbnails"></ul>
+									<script id="tpl" type="text/html">
+									<@for(var i = 0; i < list.length; i++) {@>
+									<li>
+										<a id="<@:=list[i].item_id@>" href="<@:=list[i].pic_url@>" title="<@:=list[i].item_title@>" data-rel="colorbox">
+											<img alt="<@:=list[i].item_title@>" src="<@:=list[i].pic_url@>_150x150.jpg" />
+											<div class="tags">
+												<span class="label-holder">
+													<span class="label label-info">breakfast</span>
+												</span>
+
+												<span class="label-holder">
+													<span class="label label-danger">fruits</span>
+												</span>
+											</div>
+										</a>
+
+										<div class="tools">
+											<a href="#">
+												<i class="icon-link"></i>
+											</a>
+
+											<a href="#">
+												<i class="icon-paper-clip"></i>
+											</a>
+
+											<a href="#">
+												<i class="icon-pencil"></i>
+											</a>
+
+											<a href="#">
+												<i class="icon-remove red"></i>
+											</a>
+										</div>
+									</li>
+									<@}@>
+									</script>
+								</div><!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+				<% include pub/settings.html %>
+			</div><!-- /.main-container-inner -->
+		</div><!-- /.main-container -->
+		<% include pub/script.html %>
+	</body>
+</html>

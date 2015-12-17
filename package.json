@@ -1,0 +1,14 @@
+{
+  "name": "tianxiaopianyi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node start &",
+    "stop": "node stop &",
+    "restart": "node restart &",
+    "test" : "mocha --harmony test/test.js"
+  },
+  "author": "zhangjy",
+  "license": "ISC"
+}

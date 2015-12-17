@@ -1,0 +1,14 @@
+<script type="text/javascript" src="<%=jsServer%>js/lib/sea.js"></script>
+<script type="text/javascript">
+seajs.config({
+  base: "/js",
+  alias: {
+    "jquery": "<%=jsServer%>js/lib/jquery-1.11.3.min.js"
+  }
+})
+</script>
+
+<% pagejs.forEach(function (j) {%>
+<script src="<%=jsServer%><%=:j%>"></script>
+<% })%>
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_3398666'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/stat.php%3Fid%3D3398666%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>

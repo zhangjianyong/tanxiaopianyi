@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<% include pub/header.html %>
+<body>
+<% include pub/top.html %>
+<% include pub/logo.html %>
+<% include pub/nav.html %>
+<div class="main_bg">
+	<div class="main">
+    	<!--  导航  -->
+        <div id="jx_mlnav_bg">
+            <div class="fixnav">
+                <div class="mlnav_bg">
+                    <div class="name">今日团</div>
+                    <div class="mlnav"><%cats.forEach(function(c){%><a href="<%=: '/search',{'kw':_kw,'cat':c.id} | link %>"><%=:c.name%>(<%=:c.count %>)</a><%})%></div>
+                </div>
+
+                    <div class="search">搜索结果：[<%=:_kw %>]共找到<span><%=:page.total %></span>件相关商品 </div>
+            </div>
+        </div>
+    	<!--  导航  -->
+        <!--  产品列表 -->
+        <% if(page.total > 0){ %>
+        <ul class="pro_list">
+            <% var p = 0; for(var i = 0;i < page.rows.length; i++){ var r = page.rows[i]; %>
+        	<li class="li_list" data-page=<%=:p %> <% if(p!=0){ %>style="display:none"<% } %>>
+            	<a href="/union?prd=<%=:r.id%>&to=<%=:r.url%>" target="_blank" class="pic"><img src="<%=:r.ori_pic_url%>"></a>
+                <p class="title"><a href="<%=:r.url%>" target="_blank"><%=:r.title %></a></p>
+                <div class="money_bg">
+                	<span class="symol">￥</span>
+                	<span class="money"><%=:r.discount_price/100 | parseFloat %></span>
+                    <div class="zk_bg">
+                    	<p class="zk"><%=:r.discount_rate/100 | parseFloat %>折</p>
+                        <p class="del">原价￥<%=:r.auction_price/100 | parseFloat %></p>
+                    </div>
+                    <div class="tb_bg">
+                    	<p class="logo tb"></p>
+                        <p class="word">新品上架</p>
+                    </div>
+                    <a href="<%=:r.url%>" target="_blank" class="tb_btn">去<%=:r.p_shop_name%>抢购</a>
+                </div>
+            </li>
+            <% if((i==18 & page.rows.length > 20) || (i > 18 & (i-18)%20 == 0 & i < page.rows.length -2 )){ %>
+            <li class="next" data-page=<%=:p %> <% if(p!=0){ %>style="display:none"<% } %>>
+                <a href="javascript:void(0);" class="next_a"></a>
+            </li><% ++p;}}%>
+
+        </ul>
+
+        <div class="page auo" data-page=<%=:p%> style="display:none">
+            <ul class="items">
+                <% if(page.page_num == 1){ %>
+                <li class="item prev prev-disabled"> <span class="num"> <span class="icon icon-btn-prev-2-disable"></span> <span>上一页</span> </span> </li>
+                <% }else{ %>
+                <li class="item prev"><a class="J_Ajax num" href="<%=: '/search',{'cat':_cat, 'page':page.page_num-1} | link %>">上一页</a></li>
+                <% } %>
+                <% for( var i=1; i<=page.page_count; i++){%>
+                <% if(((i==2 & page.page_num > 5) || (i==page.page_count & page.page_num < page.page_count-5))  & page.page_count > 10){ %>
+                <li class="item dot">...</li>
+                <% } %>
+                <% if(i==page.page_num){ %>
+                <li class="item active"><span class="num"><%=i %></span></li>
+                <% }else if( i==1 || i==page.page_count || (i<page.page_num & i>page.page_num-5) || (i>page.page_num & i<page.page_num+5)){ %>
+                <li class="item"> <a class="J_Ajax num" href="<%=: '/search',{'cat':_cat, 'page':i} | link %>"><%=i %></a> </li>
+                <% }} %>
+                <% if(page.page_num == page.page_count){ %>
+                <li class="item next prev-disabled"> <span class="num"> <span class="icon icon-btn-prev-2-disable"></span> <span>下一页</span> </span> </li>
+                <% }else{ %>
+                <li class="item next"> <a class="J_Ajax num" href="<%=: '/search',{'cat':_cat, 'page':page.page_num+1} | link %>">下一页</a> </li>
+                <% } %>
+            </ul>
+       </div><% } %>
+    </div>
+</div>
+<!--  底部  -->
+<% include pub/footer.html %>
+</body>
+</html>

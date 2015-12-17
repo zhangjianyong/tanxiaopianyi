@@ -1,0 +1,46 @@
+<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+	<i class="icon-double-angle-up icon-only bigger-110"></i>
+</a>
+<!-- basic scripts -->
+
+<!--[if !IE]> -->
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<![endif]-->
+
+<!--[if !IE]> -->
+
+<script type="text/javascript">
+	window.jQuery || document.write("<script src='/admin/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+</script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script type="text/javascript">
+window.jQuery || document.write("<script src='/admin/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+
+<script type="text/javascript">
+	if("ontouchend" in document) document.write("<script src='/admin/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+</script>
+<script src="/admin/js/bootstrap.min.js"></script>
+<script src="/admin/js/typeahead-bs2.min.js"></script>
+
+<!-- page specific plugin scripts -->
+
+<script src="/admin/js/date-time/bootstrap-datepicker.min.js"></script>
+<script src="/admin/js/jqGrid/jquery.jqGrid.min.js"></script>
+<script src="/admin/js/jqGrid/i18n/grid.locale-en.js"></script>
+
+<!-- ace scripts -->
+
+<script src="/admin/js/ace-elements.min.js"></script>
+<script src="/admin/js/ace.min.js"></script>
+<% js.forEach(function (j) {%>
+<script src="<%=:j%>"></script>
+<% })%>
