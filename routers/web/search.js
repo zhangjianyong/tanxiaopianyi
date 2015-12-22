@@ -38,7 +38,6 @@ router.get('/search', function*(next) {
 
 	var searchResult = yield new Promise((resolve, reject) => {
 		client.RunQueries(function(err, result) {
-			console.log(result);
 			if (err) {
 				reject(err);
 			}

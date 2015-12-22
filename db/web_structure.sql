@@ -40,7 +40,8 @@ CREATE TABLE `alimama_act_item` (
   `share_rate` INT(5) NOT NULL DEFAULT '0' COMMENT '分成比例',
   `create_time` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
   `last_modify` TIMESTAMP NOT NULL DEFAULT now() ON UPDATE now(),
-  PRIMARY KEY (`item_id`, `activity_id`)
+  PRIMARY KEY (`item_id`, `activity_id`),
+  INDEX `idx_activity_id` (`activity_id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 

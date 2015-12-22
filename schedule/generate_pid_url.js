@@ -14,13 +14,13 @@ spider.on('fetch', function(url_tpl, page, opt) {
 	var ali_pid = opt.pid;
 	_request({
 		url: url,
-		timeout: 3000,
+		timeout: 5000,
 	}, (error, response, body) => {
 		//切记释放连接
 		spider.release();
 		var data = {};
 		if (error) {
-			console.error(error);
+			console.error(url, error);
 			spider.fetch(url_tpl, page, opt);
 		} else {
 			try {
@@ -45,12 +45,12 @@ spider.on('fetch', function(url_tpl, page, opt) {
 	});
 });
 
-// var sched = later.parse.cron('0 52 * * * ?', true);
-var sched = {
-	schedules: [{
-		m: [18]
-	}]
-};
+var sched = later.parse.cron('0/10 * * * * ?', true);
+// var sched = {
+// 	schedules: [{
+// 		m: [18]
+// 	}]
+// };
 later.setInterval(function() {
 	if (!spider.isStop()) {
 		console.log('generate_pid_url is running.');

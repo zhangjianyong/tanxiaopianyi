@@ -3,12 +3,7 @@ var _request = require('request');
 var db = require('../db').back;
 var later = require('later');
 
-// var sched = later.parse.cron('0 0/30 * * * ?', true);
-var sched = {
-	schedules: [{
-		m: [18]
-	}]
-};
+var sched = later.parse.cron('0 0/3 * * * ?', true);
 later.setInterval(function() {
 	try {
 		console.log('pick item to product start')
