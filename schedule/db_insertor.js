@@ -33,6 +33,14 @@ jobs.push({
 	}
 });
 jobs.push({
+	des: '生成链接入库',
+	name: 'generate_pid_url',
+	sql: 'INSERT IGNORE INTO product_url(product_id, activity_id, item_id, ali_pid, url, create_time) VALUES(?, ?, ?, ?, ?, null)',
+	transform: function(data) {
+		return data;
+	}
+});
+jobs.push({
 	des: 'manpianyi分类抓取入库',
 	name: 'manpianyi_cat_item',
 	sql: 'INSERT IGNORE INTO fetch_item(site_id, site_pid, item_id, cat_id, pic_url, title) VALUES(?, ?, ?, ?, ?, ?) ',

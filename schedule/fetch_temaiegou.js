@@ -62,12 +62,7 @@ spider.on('fetch', function(url_tpl, page, opt) {
 					var _img = $(this).find('div[class=pic] div[class=pic_img]').first();
 					var href = _img.find('a').first().attr('href');
 					var pic_url = _img.find('img').first().attr('data-original');
-					// renderPage(href);
-					// queue.add({
-					// 	'item_id': $(this).attr('key'),
-					// 	'pic_url': $(this).find('div[class=pic] div[class=pic_img] a img').first().attr('data-original'),
-					// 	'cat_id': opt.cat
-					// });
+					renderPage(href);
 				});
 
 				spider.fetch(url_tpl, ++page, opt);
@@ -77,7 +72,6 @@ spider.on('fetch', function(url_tpl, page, opt) {
 						eval(THAT.replace('_TMH.setDeal({ deals: deals});', '').replace('_TMH.scrollLoad();', ''));
 						var items = JSON.parse(deals);
 						items.forEach(function(i) {
-							// redis.lpush('', );
 							// if (i.numIid) {
 							// 	queue.add({
 							// 		'item_id': i.numIid,

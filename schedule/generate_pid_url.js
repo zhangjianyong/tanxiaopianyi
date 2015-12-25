@@ -45,7 +45,7 @@ spider.on('fetch', function(url_tpl, page, opt) {
 	});
 });
 
-var sched = later.parse.cron('0 1 * * * ?', true);
+var sched = later.parse.cron('0/10 * * * * ?', true);
 // var sched = {
 // 	schedules: [{
 // 		m: [18]
