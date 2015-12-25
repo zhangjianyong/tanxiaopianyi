@@ -20,7 +20,7 @@ spider.on('fetch', function(url_tpl, page, opt) {
 	var share_rate = opt.share_rate;
 	_request({
 		url: url,
-		timeout: 3000
+		timeout: 10000
 	}, (error, response, body) => {
 		//切记释放连接
 		spider.release();
@@ -75,25 +75,34 @@ later.setInterval(function() {
 	var act_link_tpl = 'http://temai.taobao.com/event/items.json?toPage=%s&perPageSize=%d&isPreview=1&id=%d';
 
 	/*统计当前有效的活动的数量*/
-	db.query('SELECT count(*) c FROM alimama_activity WHERE `status` = ? AND now() >= begin_time AND DATE_ADD(NOW(), INTERVAL -15 DAY) <= end_time ', ['normal'], function(err, act_count, fields) {
-		if (err) {
-			console.log(err);
-			return;
-		}
-		console.info('load alimama valid activity amount: %d', act_count[0].c);
-		var load_act_times = Math.ceil(act_count[0].c / rows);
+	try {
+		db.query('SELECT count(*) c FROM alimama_activity WHERE `status` = ? AND now() >= begin_time AND DATE_ADD(NOW(), INTERVAL -15 DAY) <= end_time ', ['normal'], function(err, act_count, fields) {
+			if (err) {
+				throw err;
+			}
+			console.info('load alimama valid activity amount: %d', act_count[0].c);
+			var load_act_times = Math.ceil(act_count[0].c / rows);
 
-		for (let i = 0; i <= load_act_times; i++) {
-			db.query('SELECT * FROM alimama_activity WHERE `status` = ? AND now() >= begin_time AND DATE_ADD(NOW(), INTERVAL -15 DAY) <= end_time LIMIT ?, ?', ['normal', i * rows, rows], function(err, acts, fields) {
-				acts.forEach(function(act) {
-					spider.fetch(util.format(act_link_tpl, '%d', perPageSize, act.activity_id), 1, {
-						'act': act.activity_id,
-						'act_begin_time': format(act.begin_time),
-						'act_end_time': format(act.end_time),
-						'share_rate': act.share_rate
+			for (let i = 0; i <= load_act_times; i++) {
+				db.query('SELECT * FROM alimama_activity WHERE `status` = ? AND now() >= begin_time AND DATE_ADD(NOW(), INTERVAL -15 DAY) <= end_time LIMIT ?, ?', ['normal', i * rows, rows], function(err, acts, fields) {
+					if (err) {
+						throw err;
+					}
+					if (!acts) {
+						return;
+					}
+					acts.forEach(function(act) {
+						spider.fetch(util.format(act_link_tpl, '%d', perPageSize, act.activity_id), 1, {
+							'act': act.activity_id,
+							'act_begin_time': format(act.begin_time),
+							'act_end_time': format(act.end_time),
+							'share_rate': act.share_rate
+						});
 					});
 				});
-			});
-		};
-	});
+			};
+		});
+	} catch (e) {
+		console.log(e);
+	}
 }, sched);

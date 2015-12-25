@@ -4,7 +4,7 @@ var config = require('../config');
 var redis = require('ioredis')(config.redis);
 var later = require('later');
 var util = require('util');
-var cheerio = require('cheerio')
+var cheerio = require('cheerio');
 
 //按分类抓取商品
 var spider = require('../component/spider')({
@@ -72,13 +72,13 @@ spider.on('fetch', function(url_tpl, page, opt) {
 	});
 });
 
-// var sched = later.parse.cron('0/20 * * * * ?', true);
-var sched = {
-	schedules: [{
-		m: [3],
-		s: [0]
-	}]
-};
+var sched = later.parse.cron('0 0/30 * * * ?', true);
+// var sched = {
+// 	schedules: [{
+// 		m: [10],
+// 		s: [0]
+// 	}]
+// };
 
 later.setInterval(function() {
 	"use strict";
@@ -128,9 +128,6 @@ var spider_order = require('../component/spider')({
 	'max_threads': 1,
 	'max_try_count': 2
 });
-var queue_order = require('../component/queue')({
-	'max_size': 100
-});
 
 spider_order.on('fetch', function(url_tpl, page, opt) {
 	var url = util.format(url_tpl, page == 1 ? "" : "_" + page);
@@ -157,31 +154,9 @@ spider_order.on('fetch', function(url_tpl, page, opt) {
 				ps.each(function(i, ele) {
 					var href = $(this).find('div[class=goods-box] div[class=goods-pic] a').first().attr('href');
 					var site_pid = href.replace('http://jp.manpianyi.com/jump_url.php?id=', '');
-					queue_order.add({
-						'item_id': $(this).attr('key'),
-						'site_pid': site_pid,
-						'rank': ++rank
-					});
+					redis.lpush('manpianyi_cat_item', [++rank,site_pid,$(this).attr('key')]);
 				});
 
-
-				// $("script").each(function(i, ele) {
-				// 	var THAT =
-				// 		$(this).text();
-				// 	if (THAT.search('jsonobj_all') >= 0) {
-				// 		eval(THAT);
-				// 		var pages = JSON.parse(jsonobj_all);
-				// 		for (var key in pages) {
-				// 			pages[key].forEach(function(p) {
-				// 				if (p.num_iid) {
-				// 					queue_order.add({
-				// 						'item_id': p.num_iid
-				// 					});
-				// 				}
-				// 			})
-				// 		}
-				// 	}
-				// });
 				spider_order.fetch(url_tpl, ++page, opt);
 
 			} catch (e) {
@@ -191,36 +166,12 @@ spider_order.on('fetch', function(url_tpl, page, opt) {
 	});
 });
 
-var update_sql = 'UPDATE fetch_item SET rank = ? WHERE site_id = ? AND item_id = ?';
-queue_order.on('max', function(data) {
-	try {
-		db.getConnection(function(err, conn) {
-			if (err) throw err;
-			conn.prepare(update_sql, function(err, statement) {
-				if (err) throw err;
-				data.forEach(function(d) {
-					statement.execute([d.rank, site_id, d.item_id], function(err, rows, fields) {
-						if (err) throw err;
-					});
-				})
-			})
-			conn.release();
-		});
-	} catch (e) {
-		console.log(e);
-	}
-});
-
-spider_order.on('end', function() {
-	queue_order.flush();
-})
-
-// var sched = later.parse.cron('0/20 * * * * ?', true);
-var sched = {
-	schedules: [{
-		m: [07]
-	}]
-};
+var sched = later.parse.cron('0 0/30 * * * ?', true);
+// var sched = {
+// 	schedules: [{
+// 		m: [07]
+// 	}]
+// };
 
 later.setInterval(function() {
 	"use strict";

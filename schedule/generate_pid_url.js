@@ -14,13 +14,13 @@ spider.on('fetch', function(url_tpl, page, opt) {
 	var ali_pid = opt.pid;
 	_request({
 		url: url,
-		timeout: 3000,
+		timeout: 5000,
 	}, (error, response, body) => {
 		//切记释放连接
 		spider.release();
 		var data = {};
 		if (error) {
-			console.error(error);
+			console.error(url, error);
 			spider.fetch(url_tpl, page, opt);
 		} else {
 			try {
@@ -45,12 +45,12 @@ spider.on('fetch', function(url_tpl, page, opt) {
 	});
 });
 
-// var sched = later.parse.cron('0 52 * * * ?', true);
-var sched = {
-	schedules: [{
-		m: [18]
-	}]
-};
+var sched = later.parse.cron('0 1 * * * ?', true);
+// var sched = {
+// 	schedules: [{
+// 		m: [18]
+// 	}]
+// };
 later.setInterval(function() {
 	if (!spider.isStop()) {
 		console.log('generate_pid_url is running.');
@@ -59,8 +59,14 @@ later.setInterval(function() {
 	console.log('start generate_pid_url.');
 	var act_link_tpl = 'http://temai.taobao.com/event/items.json?toPage=%s&perPageSize=%d&catId=&tagId=&pid=%s&unid=&platformType=&isPreview=0&id=%d';
 	try {
-		db.query('SELECT p.id, p.`item_id`, p.`activity_id`, a.`ali_pid` FROM product p, alimama_pid a WHERE NOT EXISTS (SELECT ali_pid FROM product_url pu WHERE pu.product_id = id AND pu.ali_pid = ali_pid)', function(err, items, fields) {
-			items.forEach(function(i) {
+		db.query('SELECT p.id, p.`item_id`, p.`activity_id`, a.`ali_pid` FROM product p, alimama_pid a WHERE NOT EXISTS (SELECT ali_pid FROM product_url pu WHERE pu.product_id = id AND pu.ali_pid = ali_pid)', function(err, rows, fields) {
+			if (err) {
+				throw err;
+			}
+			if (!rows) {
+				return;
+			}
+			rows.forEach(function(i) {
 				spider.fetch(util.format(act_link_tpl, '%d', 1000, i.ali_pid, i.activity_id), 1, {
 					'activity_id': i.activity_id,
 					'ali_pid': i.ali_pid,
