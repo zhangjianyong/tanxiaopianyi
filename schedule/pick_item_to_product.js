@@ -32,6 +32,8 @@ later.setInterval(function() {
 					// console.log('pick %d items', items.length);
 				for (let i in items) {
 					conn.execute('SELECT * FROM alimama_act_item WHERE item_id = ? AND act_begin_time <= curdate() AND curdate() <= DATE_ADD(act_end_time,INTERVAL 15 DAY) ORDER BY commission_rate*share_rate desc LIMIT 0,1', [i], function(err, acts, fields) {
+						if (err) throw err;
+						if (!acts) return;
 						var a = acts[0];
 						if (!a) return;
 						let item = items[i];
@@ -42,9 +44,7 @@ later.setInterval(function() {
 						// console.log(item);
 						var rank = parseInt(a.rank * a.commission_rate * a.share_rate / 1000000);
 						conn.execute('INSERT INTO product(activity_id, item_id, title, ori_pic_url, commission_rate, share_rate, is_sold_out, discount_price, auction_price, discount_rate, sold_quantity, shop_id, shop_name, p_shop_id, p_shop_name, act_begin_time, act_end_time, cat_id, rank, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE activity_id = ?, commission_rate = ?, share_rate = ?, is_sold_out = ?, discount_price = ?, auction_price = ?, discount_rate = ?, sold_quantity = ?, act_begin_time = ?, act_end_time = ?, cat_id = ?, rank = ?, last_modify = ?', [a.activity_id, a.item_id, a.item_title, a.pic_url, a.commission_rate, a.share_rate, a.is_sold_out, a.discount_price, a.auction_price, a.discount_rate, a.sold_quantity, 0, 's', (a.is_mall == 1 ? 2 : 1), (a.is_mall == 1 ? '天猫' : '淘宝'), a.act_begin_time, a.act_begin_time, a.cat_id, rank, null, a.activity_id, a.commission_rate, a.share_rate, a.is_sold_out, a.discount_price, a.auction_price, a.discount_rate, a.sold_quantity, a.act_begin_time, a.act_begin_time, a.cat_id, rank, null], function(err, rows, fields) {
-							if (err) {
-								throw err;
-							}
+							if (err) throw err;
 						});
 					});
 				}

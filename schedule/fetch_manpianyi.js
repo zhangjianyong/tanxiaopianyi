@@ -154,7 +154,7 @@ spider_order.on('fetch', function(url_tpl, page, opt) {
 				ps.each(function(i, ele) {
 					var href = $(this).find('div[class=goods-box] div[class=goods-pic] a').first().attr('href');
 					var site_pid = href.replace('http://jp.manpianyi.com/jump_url.php?id=', '');
-					redis.lpush('manpianyi_cat_item', [++rank,site_pid,$(this).attr('key')]);
+					redis.lpush('manpianyi_pos_item', [++rank,site_pid,$(this).attr('key')].join('\0'));
 				});
 
 				spider_order.fetch(url_tpl, ++page, opt);
