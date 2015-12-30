@@ -42,7 +42,9 @@ spider.on('fetch', function(url_tpl, page, opt) {
 					spider.fetch(url_tpl, ++page, opt);
 				}
 				data.data.result.forEach(function(d) {
-					redis.lpush('alimama_act', [d.eventId, d.title, d.comments, d.share_rate, d.avg_commission, d.begin_time, d.end_time].join('\0'));
+					var share_rate = parseInt(d.shareRate)*100;
+					var avg_commission = parseInt(d.avgCommission)*100;
+					redis.lpush('alimama_act', [d.eventId, d.eventTitle, d.comments, share_rate, avg_commission, d.startTime, d.endTime].join('\0'));
 				});
 			} catch (e) {
 				console.log(e);
@@ -53,8 +55,8 @@ spider.on('fetch', function(url_tpl, page, opt) {
 
 var sched = {
 	schedules: [{
-		m: [43],
-		s: [0]
+		m: [1],
+		s: [40]
 	}, {
 		// h: [19],
 		m: [50]
@@ -73,8 +75,8 @@ later.setInterval(function() {
 
 	spider.fetch(url_tpl, 1, {
 		'per_page_size': 100,
-		'spm': 'a219t.7473494.1998155389.3.Pjafsq',
+		'spm': 'a219t.7473494.1998155389.3.TdbZgH',
 		'_tb_token_': 'RxNdp1cLxuo',
-		'cookie': 'cookie2=1c02bcd7ee4a9dc2be2c97c89a26b4af; t=90c2b6bc708003bcda3942625bb9264c; cna=Cu3kDK/IhXcCAXcoNQJaD6l+; lzstat_uv=3380532563323835873|2876347@2650839@2650835@1774292@1774054; lzstat_ss=3502239773_0_1434394041_2876347|638893544_0_1434393777_2650839|2022456848_0_1434393777_2650835|643902365_0_1445447120_1774292|1325229190_0_1445447120_1774054; _tb_token_=RxNdp1cLxuo; v=0; cookie32=b7fb82705c8cc4836942396b784fd535; cookie31=MTcwNzU2ODMsdGVhcmZseWluaGVhdmVuLHRlYXJmbHlpbmhlYXZlbkBnbWFpbC5jb20sVEI%3D; alimamapwag=TW96aWxsYS81LjAgKFdpbmRvd3MgTlQgNi4xOyBXT1c2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzQzLjAuMjM1Ny4xMzAgU2FmYXJpLzUzNy4zNg%3D%3D; login=VFC%2FuZ9ayeYq2g%3D%3D; alimamapw=QwQDR1UNHV8MXQQFFVVbPlRUU1VUVARWVFRXAlhWAFYFVFdWBFIABARQAgJTUQQG; isg=5A0EF1C35104DA33664E1930630F791A; l=AlJSA/4-oi4207lJoAZ4B6osIhY2QFb4'
+		'cookie': 'cookie2=1c02bcd7ee4a9dc2be2c97c89a26b4af; t=90c2b6bc708003bcda3942625bb9264c; cna=Cu3kDK/IhXcCAXcoNQJaD6l+; lzstat_uv=3380532563323835873|2876347@2650839@2650835@1774292@1774054; lzstat_ss=3502239773_0_1434394041_2876347|638893544_0_1434393777_2650839|2022456848_0_1434393777_2650835|643902365_0_1445447120_1774292|1325229190_0_1445447120_1774054; _tb_token_=RxNdp1cLxuo; v=0; cookie32=b7fb82705c8cc4836942396b784fd535; cookie31=MTcwNzU2ODMsdGVhcmZseWluaGVhdmVuLHRlYXJmbHlpbmhlYXZlbkBnbWFpbC5jb20sVEI%3D; alimamapwag=TW96aWxsYS81LjAgKFdpbmRvd3MgTlQgNi4xOyBXT1c2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzQzLjAuMjM1Ny4xMzAgU2FmYXJpLzUzNy4zNg%3D%3D; login=Vq8l%2BKCLz3%2F65A%3D%3D; alimamapw=QwQDR1UNHV8MXQQFFVVbPlRUU1VUVARWVFRXAlhWAFYFVFdWBFIABARQAgJTUQQG; isg=E652CBDC8F1B123AAF635D2DDF124174; l=AhUVREX7HZeNct7w63eXv-OdpR/PEskk'
 	});
 }, sched);

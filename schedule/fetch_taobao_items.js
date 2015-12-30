@@ -56,7 +56,7 @@ spider.on('fetch', function(url_tpl, page, opt) {
 // 		m: [30]
 // 	}]
 // };
-var sched = later.parse.cron('0 18 * * * ?', true);
+var sched = later.parse.cron('0 43 * * * ?', true);
 
 var rows = 1000;
 
