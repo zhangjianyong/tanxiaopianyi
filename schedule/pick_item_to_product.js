@@ -33,9 +33,9 @@ later.setInterval(function() {
 				} else {
 					i.rank += 50;
 				}
-				
+
 			});
-			for(let id in items){
+			for (let id in items) {
 				let it = items[id];
 				redis.lpush('pick_item_to_product', [it.item_id, it.cat_id, it.rank, it.title, it.pic_url].join('\0'));
 			}
